@@ -1,0 +1,8 @@
+# text backgup files
+*.bak
+
+# Environment variables
+*.env
+
+# Database
+*.sqlite3
