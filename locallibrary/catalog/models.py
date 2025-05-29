@@ -52,7 +52,7 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre,
                                    help_text="Select a genre for this book")
 
-    language = models.ForeignKey('Langauge', on_delete=models.SET_NULL,
+    language = models.ForeignKey('Language', on_delete=models.SET_NULL,
                                  null=True)
 
     def __str__(self):
