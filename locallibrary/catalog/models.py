@@ -5,7 +5,7 @@ from django.db.models import UniqueConstraint # Constraints field to
                                               # unique values
 from django.db.models.functions import Lower # Returns lower cased value of field
 
-# Genre model
+import uuid
 
 class Genre(models.Model):
     """ Model representing a book genre."""
@@ -59,4 +59,39 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
         return reverse('book-detail', args=[str(self.id)])
+
+
+class BookInstance(models.Model):
+    """ Model representing a specific copy of a book
+    (i.e. taht can be borrowed form the library). """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
+                          help_text="""Unique ID for this book across the
+                          library""")
+
+    book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
+    imprint = models.CharField(max_length=200)
+    due_back = models.DateField(null=True, blank=True)
+
+    LOAN_STATUS = (
+        ('m', 'Maintenance'),
+        ('o', 'On loan'),
+        ('a', 'Available'),
+        ('r', 'Reserverd'),
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=LOAN_STATUS,
+        blank=True,
+        default='m',
+        help_text="Book availability",
+    )
+
+    class Meta:
+        ordering = ['due_back']
+
+    def __str__(self):
+        """ String for representing the Model object """
+        return f'{self.id} ({self.book.title})'
 
