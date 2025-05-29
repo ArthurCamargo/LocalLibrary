@@ -17,8 +17,12 @@ class AuthorAdmin(admin.ModelAdmin):
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'display_genre')
 
+    inlines = [BooksInstanceInline]
+
+
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
+    list_display = ('imprint', 'book', 'status', 'due_back', 'id')
     list_filter = ('status', 'due_back')
 
     fieldsets = (
