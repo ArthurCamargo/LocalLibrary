@@ -52,6 +52,9 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre,
                                    help_text="Select a genre for this book")
 
+    language = models.ForeignKey('Langauge', on_delete=models.SET_NULL,
+                                 null=True)
+
     def __str__(self):
         """String for representing the Model object."""
         return self.title
@@ -113,3 +116,24 @@ class Author(models.Model):
         """ String for representing the Model object. """
         return f'{self.last_name}, {self.first_name}'
 
+class Language(models.Model):
+    """ Model representing the language of a book. """
+    name = models.CharField(max_length=100,
+                            unique=True,
+                            help_text="""Enter the name of the language!""")
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            UniqueConstraint(
+                Lower('name'),
+                name='language_name_case_insensitive',
+                violation_error_message = """Language already exists (case
+                insensitive match)"""
+            ),
+        ]
+
+
+    def __str__(self):
+        """ String representing the Langague model."""
+        return f'{self.name}'
